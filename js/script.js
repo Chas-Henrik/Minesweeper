@@ -75,6 +75,7 @@ function startGame() {
     resetGame();
     generateGameGrid();
     renderGameGrid();
+    gameStartButtonElement.innerText = '😀';
     startGameTimer();
     console.log('Game started');
 }
@@ -197,6 +198,5 @@ function gameOver() {
     intervalId = null;
     gameGrid.removeEventListener('click', handleCellLeftClick);
     gameGrid.removeEventListener('contextmenu', handleCellRightClick);
+    gameStartButtonElement.innerText = '😟';
 }
-
-//Button emoji: 😀🙂
