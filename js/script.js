@@ -146,6 +146,13 @@ function startGameTimer() {
 /* Handle Game Events */
 
 function handleCellLeftClick(event) {
+    event.preventDefault();
+
+    if(event.target === gameGrid) {
+        console.log('Cell not clicked');
+        return;
+    }
+
     const row = event.target.dataset.row;
     const column = event.target.dataset.column;
     gameCells[row][column].isRevealed = true;
@@ -154,12 +161,18 @@ function handleCellLeftClick(event) {
 }
 
 function handleCellRightClick(event) {
+    event.preventDefault();
+
+    if(event.target === gameGrid) {
+        console.log('Cell not clicked');
+        return;
+    }
+
     const row = event.target.dataset.row;
     const column = event.target.dataset.column;
     const cell = gameCells[row][column];
     cell.isMarked = !cell.isMarked;
     cell.element.innerText = "🚩";
-    event.preventDefault();
     console.log(`Cell [${row}, ${column}] right clicked`);
 }
 
