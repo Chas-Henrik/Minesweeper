@@ -11,10 +11,35 @@
     <title>Minesweeper</title>
 </head>
 <body>
+    <dialog id="settings-dialog" class="settings-dialog">
+        <form class="settings-form">
+            <fieldset class="settings-fieldset">
+                <legend>Game Board Size</legend>
+                
+                <div>
+                    <input id="small-board" name="board-size" value="small" type="radio" checked >
+                    <label for="small-board">Small (8x8)</label>
+                </div>
+                <div>
+                    <input id="medium-board" name="board-size" value="medium" type="radio" >
+                    <label for="medium-board">Medium (16x16)</label>
+                </div>
+                <div>
+                    <input id="large-board" name="board-size" value="large" type="radio" >
+                    <label for="large-board">Large (24x24)</label>
+                </div>
+            </fieldset>
+
+            <div class="settings-buttons">
+                <button value="cancel" formmethod="dialog">Cancel</button>
+                <button id="settingsOkBtn" value="default">Ok</button>
+            </div>
+        </form>
+    </dialog>
     <div id="mine-sweeper-container" class="mine-sweeper-container">
         <nav id="game-nav" class="game-nav">
             <ul id="game-menu" class="game-menu">
-                <li>Game</li>
+                <li id="game-menu-game">Game</li>
                 <li>Help</li>
             </ul>
         </nav>

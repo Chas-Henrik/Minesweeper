@@ -1,3 +1,8 @@
+const settingsDialog = document.getElementById("settings-dialog");
+const settingsForm = settingsDialog.querySelector("form");
+const settingsOkBtn = document.getElementById("settingsOkBtn");
+const mineSweeperContainer = document.getElementById("mine-sweeper-container");
+const gameMenuGame = document.getElementById('game-menu-game');
 const scoreBoardElement = document.getElementById('score-board');
 const gameMinesLeft = document.getElementById('game-mines-left');
 const gameTime = document.getElementById('game-time');
@@ -9,17 +14,20 @@ const gameMessageText = document.getElementById('game-message-text');
 const gameMessageEmoji = document.getElementById('game-message-emoji');
 const gameMessageButton = document.getElementById('game-message-button');
 
+gameMenuGame.addEventListener('click', settingsMenu);
 gameStartButtonElement.addEventListener('click', resetGame);
 gameMessageButton.addEventListener('click', closeGameMessage);
 
 const adjacentMinesColor = ["#0000FF", "#008000", "#FF0000", "#A50923", "#b86ceb", "#eb6cb4", "#fcbd86", "#f3f797"];
-const CELLS_ROW = 8;
-const CELLS_COL = 8;
-const MINES = 10;
+let CELLS_ROW = 8;
+let CELLS_COL = 8;
+let MINES = 10;
 
 let revealedCells = 0;
 let minesLeft = MINES;
 let gameState = 'stopped';
+let boardSize = 'small';
+let scaleFactor = 1;
 
 const cell = {
     column: 0,
@@ -31,7 +39,8 @@ const cell = {
     element: null
 }
 
-let gameCells = [];
+const gameCells = [];
+
 
 /* Timer functions */
 
@@ -72,6 +81,69 @@ function forEachAdjacentCell(cell, callback) {
     }
 }
 
+/* Settings Menu */
+
+function settingsMenu() {
+    settingsDialog.showModal();
+    openCheck(settingsDialog);
+}
+
+settingsDialog.addEventListener("close", (e) => {
+    boardSize =
+        settingsDialog.returnValue === "default"
+        ? "No return value."
+        : settingsDialog.returnValue; // Have to check for "default" rather than empty string
+
+    settingsDialog.close("default");
+
+    // Stop the current game
+    stopGame();
+
+    // Delete the current game board
+    deleteBoard();
+    switch (boardSize) {
+        case "small":
+            CELLS_ROW = 8;
+            CELLS_COL = 8;
+            MINES = Math.floor(CELLS_ROW*CELLS_COL*0.16);
+            break;
+        case "medium":
+            CELLS_ROW = 16;
+            CELLS_COL = 16;
+            MINES  = Math.floor(CELLS_ROW*CELLS_COL*0.18);
+            break;
+        case "large":
+            CELLS_ROW = 24;
+            CELLS_COL = 24;
+            MINES  = Math.floor(CELLS_ROW*CELLS_COL*0.21);
+            break;
+        default:
+            scaleFactor = 1;
+            CELLS_ROW = 8;
+            CELLS_COL = 8;
+            MINES = Math.floor(CELLS_ROW*CELLS_COL*0.16);
+            break;
+    }
+
+    // Resize the grid element fontSize with scaleFactor
+    scaleFactor = CELLS_ROW/8;
+
+    // Resize the game grid
+    gameGridElement.style.gridTemplateColumns = `repeat(${CELLS_COL}, 1fr)`;
+    gameGridElement.style.gridTemplateRows = `repeat(${CELLS_ROW}, 1fr)`;
+
+    // Re-create the game board
+    createBoard(); 
+});
+
+settingsOkBtn.addEventListener("click", (event) => {
+    event.preventDefault(); // We don't want to submit this form
+    const data = new FormData(settingsForm);
+    settingsDialog.close(data.get("board-size"));
+    event.preventDefault();
+});
+
+
 /* Create Game */
 
 createBoard();
@@ -79,6 +151,11 @@ createBoard();
 function createBoard() {
     createBoardArray();
     createGameGrid();
+}
+
+function deleteBoard() {
+    deleteGameGrid()
+    deleteBoardArray();
 } 
 
 function createBoardArray() {
@@ -100,6 +177,13 @@ function createBoardArray() {
     }
 }
 
+function deleteBoardArray() {
+    for (let row = 0; row < gameCells.length; row++) {
+        gameCells[row].splice(0, gameCells[row].length);
+    }
+    gameCells.splice(0, gameCells.length);
+}
+
 function createGameGrid() {
     for (let row = 0; row < CELLS_ROW; row++) {
         for (let column = 0; column < CELLS_COL; column++) {
@@ -109,12 +193,26 @@ function createGameGrid() {
     }
 }
 
+function deleteGameGrid() {
+    for (let row = 0; row < CELLS_ROW; row++) {
+        for (let column = 0; column < CELLS_COL; column++) {
+            const cell = gameCells[row][column];
+            gameGridElement.removeChild(cell.element);
+            delete cell.element;
+        }
+    }
+}
+
 function createCellElement(cell) {
     const cellElement = document.createElement('div');
+    const fontSize = 2.5 / scaleFactor;
     cell.element = cellElement;
     cellElement.dataset.row = cell.row;
     cellElement.dataset.column = cell.column;
     cellElement.classList.add('cell');
+    cellElement.style.fontSize = `${fontSize}rem`;
+    cellElement.style.height = `${fontSize + 0.5}rem`;
+    cellElement.style.width = `${fontSize + 0.5}rem`;
     gameGridElement.appendChild(cellElement);
     return cellElement;
 }
@@ -122,7 +220,6 @@ function createCellElement(cell) {
 /* Start Game */
 
 function resetGame() {
-
     stopGame();
     resetGameGrid();
     resetGameCounters();
@@ -235,6 +332,14 @@ function revealCell(cell) {
     cell.element.style.backgroundColor = "#dacfbf";
     cell.isRevealed = true;
     revealedCells++;
+    // Clean marker if marked
+    if(cell.isMarked) {
+        cell.isMarked = false;
+        minesLeft++;
+        if(minesLeft>=0) gameMinesLeft.innerText = minesLeft;
+    }
+
+    // Reveal cell content
     if (cell.hasMine) {
         cell.element.innerText = "💣";
         cell.element.style.backgroundColor = "red";
