@@ -43,7 +43,7 @@ const cell = {
     element: null
 }
 
-const gameCells = [];
+let gameCells = [];
 
 
 /* Timer functions */
@@ -104,6 +104,7 @@ settingsDialog.addEventListener("close", (event) => {
 
     // Delete the current game board
     deleteBoard();
+
     switch (boardSize) {
         case "small":
             CELLS_ROW = 8;
@@ -175,6 +176,7 @@ function deleteBoard() {
 
 function createBoardArray() {
     // Creating a two-dimensional array
+    gameCells = [];
     for (let row = 0; row < CELLS_ROW; row++) {
         gameCells[row] = [];
         for (let column = 0; column < CELLS_COL; column++) {
