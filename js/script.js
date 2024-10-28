@@ -237,6 +237,7 @@ function revealCell(cell) {
     revealedCells++;
     if (cell.hasMine) {
         cell.element.innerText = "💣";
+        cell.element.style.backgroundColor = "red";
         gameOver();
     } else if(cell.adjacentMines > 0) {
         cell.element.innerText = cell.adjacentMines;
@@ -267,6 +268,7 @@ function stopGame() {
 function gameOver() {
     console.log('Game over!');
     stopGame();
+    revealMines();
     gameStartButtonElement.innerText = '😟';
     gameMessageText.color = 'red';
     gameMessageText.innerText = 'Game Over!';
@@ -282,6 +284,16 @@ function gameWin() {
     gameMessageText.innerText = 'You win!!!';
     gameMessageEmoji.innerText = '😀';
     gameMessage.classList.toggle("collapsed");
+}
+
+function revealMines() {
+    gameCells.forEach(row => {  
+        row.forEach(cell => {
+            if(cell.hasMine) {
+                cell.element.innerText = "💣";
+            }
+        });
+    });
 }
 
 function closeGameMessage() {
