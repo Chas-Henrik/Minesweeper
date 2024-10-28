@@ -103,9 +103,10 @@ body {
 .game-score-info {
     background-color: var(--tertiary-background-color);
     color: red;
-    text-align: center;
+    padding: 0 1rem;
+    text-align: right;
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
     font-size: 4rem;
     line-height: 4rem;

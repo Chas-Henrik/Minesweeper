@@ -5,12 +5,15 @@ const gameGridElement = document.getElementById('game-grid');
 const gameStartButtonElement = document.getElementById('game-start-button');
 const gameGrid = document.getElementById('game-grid');
 
-gameStartButtonElement.addEventListener('click', startGame);    
+gameStartButtonElement.addEventListener('click', restartGame);    
 
 const adjacentMinesColor = ["#0000FF", "#008000", "#FF0000", "#A50923", "#b86ceb", "#eb6cb4", "#fcbd86", "#f3f797"];
 const CELLS_ROW = 8;
 const CELLS_COL = 8;
 const MINES = 10;
+
+let revealedCells = 0;
+let minesLeft = MINES;
 
 const cell = {
     column: 0,
@@ -23,6 +26,43 @@ const cell = {
 }
 
 let gameCells = [];
+
+/* Timer functions */
+
+let intervalId = null;
+
+function startGameTimer() {
+    let time = 0;
+    if (!intervalId) {
+        intervalId = setInterval(() => {
+            time++;
+            gameTime.innerText = time;
+        }, 1000);
+    }
+}
+
+/* Shared functions */
+
+function stopGameTimer() {
+    clearInterval(intervalId);
+    intervalId = null;
+}
+
+function minesCleared() {
+    return revealedCells >= CELLS_ROW * CELLS_COL - MINES;
+}
+
+function forEachAdjacentCell(cell, callback) {
+    const fromRow = Math.max(cell.row - 1, 0);
+    const toRow = Math.min(cell.row + 1, CELLS_ROW - 1);
+    const fromColumn = Math.max(cell.column - 1, 0);
+    const toColumn = Math.min(cell.column + 1, CELLS_COL - 1);
+    for (let i = fromRow; i <= toRow; i++) {
+        for (let j = fromColumn; j <= toColumn; j++) {
+            callback(gameCells[i][j]);
+        }
+    }
+}
 
 /* Create Game */
 
@@ -45,6 +85,7 @@ function createBoardArray() {
                 hasMine: false,
                 isRevealed: false,
                 isMarked: false,
+                isEmpty: true,
                 element: null
             };
         }
@@ -54,16 +95,17 @@ function createBoardArray() {
 function createGameGrid() {
     for (let row = 0; row < CELLS_ROW; row++) {
         for (let column = 0; column < CELLS_COL; column++) {
-            gameCells[row][column].element = createCell(row, column);
+            const cell = gameCells[row][column];
+            cell.element = createCellElement(cell);
         }
     }
 }
 
-function createCell(row, column) {
+function createCellElement(cell) {
     const cellElement = document.createElement('div');
-    gameCells[row][column].element = cellElement;
-    cellElement.dataset.row = row;
-    cellElement.dataset.column = column;
+    cell.element = cellElement;
+    cellElement.dataset.row = cell.row;
+    cellElement.dataset.column = cell.column;
     cellElement.classList.add('cell');
     gameGridElement.appendChild(cellElement);
     return cellElement;
@@ -71,14 +113,14 @@ function createCell(row, column) {
 
 /* Start Game */
 
-function startGame() {
+function restartGame() {
     resetGame();
     generateGameGrid();
-    renderGameGrid();
+    clearGameBoard();
     gameStartButtonElement.innerText = '😀';
-    startGameTimer();
-    console.log('Game started');
+    startGame();
 }
+
 
 function resetGame() {
     for (let row = 0; row < CELLS_ROW; row++) {
@@ -88,60 +130,51 @@ function resetGame() {
             cell.hasMine = false;
             cell.isRevealed = false;
             cell.isMarked = false;
-            cell.element.style.backgroundColor = "#C1C2C2";
-            gameGrid.addEventListener('click', handleCellLeftClick);
-            gameGrid.addEventListener('contextmenu', handleCellRightClick);
+            cell.isEmpty = true;
         }
     }
-
-    gameMinesLeft.innerText = '10';
+    revealedCells = 0;
+    minesLeft = MINES;
+    gameMinesLeft.innerText = minesLeft;
     gameTime.innerText = '0';
 }
+
 
 function generateGameGrid() {
     let mines = MINES;
     while (mines > 0) {
         const row = Math.floor(Math.random() * CELLS_ROW);
         const column = Math.floor(Math.random() * CELLS_COL);
-        if (!gameCells[row][column].hasMine) {
-            gameCells[row][column].hasMine = true;
-            incrementAdjacentMines(row, column);
+        const cell = gameCells[row][column];
+        if (!cell.hasMine) {
+            cell.hasMine = true;
+            cell.isEmpty = false;
+            forEachAdjacentCell(cell, incrementAdjacentMines);
             mines--;
         }
     }
 }
 
-function incrementAdjacentMines(row, column) {
-    const fromRow = Math.max(row - 1, 0);
-    const toRow = Math.min(row + 1, CELLS_ROW - 1);
-    const fromColumn = Math.max(column - 1, 0);
-    const toColumn = Math.min(column + 1, CELLS_COL - 1);
-    for (let i = fromRow; i <= toRow; i++) {
-        for (let j = fromColumn; j <= toColumn; j++) {
-            gameCells[i][j].adjacentMines++;
-        }
-    }
+function incrementAdjacentMines(cell) {
+    cell.adjacentMines++;
+    cell.isEmpty = false;
 }
 
-function renderGameGrid() {
+function clearGameBoard() {
     for (let row = 0; row < CELLS_ROW; row++) {
         for (let column = 0; column < CELLS_COL; column++) {
             const cell = gameCells[row][column];
             cell.element.innerText = "";
+            cell.element.style.backgroundColor = "#C1C2C2";
         }
     }
 }
 
-let intervalId = null;
-
-function startGameTimer() {
-    let time = 0;
-    if (!intervalId) {
-        intervalId = setInterval(() => {
-            time++;
-            gameTime.innerText = time;
-        }, 1000);
-    }
+function startGame() {
+    startGameTimer();
+    gameGrid.addEventListener('click', handleCellLeftClick);
+    gameGrid.addEventListener('contextmenu', handleCellRightClick);
+    console.log('Game started');
 }
 
 /* Handle Game Events */
@@ -149,54 +182,74 @@ function startGameTimer() {
 function handleCellLeftClick(event) {
     event.preventDefault();
 
-    if(event.target === gameGrid) {
-        console.log('Cell not clicked');
-        return;
+    if(event.target !== gameGrid) {
+        const cell = gameCells[event.target.dataset.row][event.target.dataset.column];
+        cell.isRevealed = true;
+        revealCell(cell);
+        console.log(`Cell [${cell.row}, ${cell.column}] left clicked`);
     }
-
-    const row = event.target.dataset.row;
-    const column = event.target.dataset.column;
-    gameCells[row][column].isRevealed = true;
-    revealCell(row, column);
-    console.log(`Cell [${row}, ${column}] left clicked`);
 }
 
 function handleCellRightClick(event) {
     event.preventDefault();
 
-    if(event.target === gameGrid) {
-        console.log('Cell not clicked');
-        return;
-    }
+    if(event.target !== gameGrid) {
+        const cell = gameCells[event.target.dataset.row][event.target.dataset.column];
+        if(!cell.isRevealed) {
+            cell.isMarked = !cell.isMarked;
+            if(cell.isMarked) {
+                cell.element.innerText = "🚩"
+                minesLeft--;
+            } else {
+                cell.element.innerText = ""
+                minesLeft++;
+            }
+            if(minesLeft>=0) gameMinesLeft.innerText = minesLeft;
+        }
 
-    const row = event.target.dataset.row;
-    const column = event.target.dataset.column;
-    const cell = gameCells[row][column];
-    cell.isMarked = !cell.isMarked;
-    cell.element.innerText = "🚩";
-    console.log(`Cell [${row}, ${column}] right clicked`);
+        console.log(`Cell [${cell.row}, ${cell.column}] right clicked`);
+    }
 }
 
-function revealCell(row, column) {
-    const cell = gameCells[row][column];
+function revealCell(cell) {
     cell.element.style.backgroundColor = "#dacfbf";
+    cell.isRevealed = true;
+    revealedCells++;
     if (cell.hasMine) {
         cell.element.innerText = "💣";
         gameOver();
     } else if(cell.adjacentMines > 0) {
         cell.element.innerText = cell.adjacentMines;
         cell.element.style.color = adjacentMinesColor[cell.adjacentMines - 1];
-    } else {
+    } else if (cell.isEmpty) {  
         cell.element.innerText = "";
+        forEachAdjacentCell(cell, revealAdjacentCells);
     }
-    
+
+    if (minesCleared()) {
+        gameWin();
+    }
+}
+
+function revealAdjacentCells(cell) {
+    if(!cell.isRevealed && cell.isEmpty) {
+        revealCell(cell);
+    }
+}
+
+function stopGame() {
+    stopGameTimer();
+    gameGrid.removeEventListener('click', handleCellLeftClick);
+    gameGrid.removeEventListener('contextmenu', handleCellRightClick);
 }
 
 function gameOver() {
     console.log('Game over');
-    clearInterval(intervalId);
-    intervalId = null;
-    gameGrid.removeEventListener('click', handleCellLeftClick);
-    gameGrid.removeEventListener('contextmenu', handleCellRightClick);
+    stopGame();
     gameStartButtonElement.innerText = '😟';
+}
+
+function gameWin() {
+    console.log('You win!');
+    stopGame();
 }
