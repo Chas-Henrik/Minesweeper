@@ -5,7 +5,7 @@ const gameGridElement = document.getElementById('game-grid');
 const gameStartButtonElement = document.getElementById('game-start-button');
 const gameGrid = document.getElementById('game-grid');
 
-gameStartButtonElement.addEventListener('click', restartGame);    
+gameStartButtonElement.addEventListener('click', resetGame);    
 
 const adjacentMinesColor = ["#0000FF", "#008000", "#FF0000", "#A50923", "#b86ceb", "#eb6cb4", "#fcbd86", "#f3f797"];
 const CELLS_ROW = 8;
@@ -14,6 +14,7 @@ const MINES = 10;
 
 let revealedCells = 0;
 let minesLeft = MINES;
+let gameState = 'stopped';
 
 const cell = {
     column: 0,
@@ -39,6 +40,7 @@ function startGameTimer() {
             gameTime.innerText = time;
         }, 1000);
     }
+    console.log('Game timer running');
 }
 
 /* Shared functions */
@@ -46,6 +48,7 @@ function startGameTimer() {
 function stopGameTimer() {
     clearInterval(intervalId);
     intervalId = null;
+    console.log('Game timer stopped');
 }
 
 function minesCleared() {
@@ -113,16 +116,22 @@ function createCellElement(cell) {
 
 /* Start Game */
 
-function restartGame() {
-    resetGame();
+function resetGame() {
+
+    stopGame();
+    resetGameGrid();
+    resetGameCounters();
     generateGameGrid();
     clearGameBoard();
-    gameStartButtonElement.innerText = '😀';
-    startGame();
+
+    gameStartButtonElement.innerText = '🙂';
+    gameGrid.addEventListener('click', handleCellLeftClick);
+    gameGrid.addEventListener('contextmenu', handleCellRightClick);
+    gameState = 'stopped';
 }
 
 
-function resetGame() {
+function resetGameGrid() {
     for (let row = 0; row < CELLS_ROW; row++) {
         for (let column = 0; column < CELLS_COL; column++) {
             const cell = gameCells[row][column];
@@ -133,12 +142,15 @@ function resetGame() {
             cell.isEmpty = true;
         }
     }
+    resetGameCounters();
+}
+
+function resetGameCounters() {
     revealedCells = 0;
     minesLeft = MINES;
     gameMinesLeft.innerText = minesLeft;
     gameTime.innerText = '0';
 }
-
 
 function generateGameGrid() {
     let mines = MINES;
@@ -170,17 +182,18 @@ function clearGameBoard() {
     }
 }
 
+/* Handle Game Events */
+
 function startGame() {
     startGameTimer();
-    gameGrid.addEventListener('click', handleCellLeftClick);
-    gameGrid.addEventListener('contextmenu', handleCellRightClick);
-    console.log('Game started');
+    gameStartButtonElement.innerText = '😀';
+    gameState = 'running';
 }
-
-/* Handle Game Events */
 
 function handleCellLeftClick(event) {
     event.preventDefault();
+
+    (gameState === 'stopped') ? startGame(): null;
 
     if(event.target !== gameGrid) {
         const cell = gameCells[event.target.dataset.row][event.target.dataset.column];
@@ -192,6 +205,8 @@ function handleCellLeftClick(event) {
 
 function handleCellRightClick(event) {
     event.preventDefault();
+
+    (gameState === 'stopped') ? startGame(): null;
 
     if(event.target !== gameGrid) {
         const cell = gameCells[event.target.dataset.row][event.target.dataset.column];
@@ -241,6 +256,7 @@ function stopGame() {
     stopGameTimer();
     gameGrid.removeEventListener('click', handleCellLeftClick);
     gameGrid.removeEventListener('contextmenu', handleCellRightClick);
+    gameState = 'stopped';
 }
 
 function gameOver() {
@@ -252,4 +268,5 @@ function gameOver() {
 function gameWin() {
     console.log('You win!');
     stopGame();
+    gameStartButtonElement.innerText = '😀';
 }
