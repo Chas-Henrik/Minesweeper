@@ -8,8 +8,9 @@
     --revealed-color: #dacfbf;
     --primary-background-color: #C1C2C2;
     --secondary-background-color: #727070;
-    --tertiary-background-color: #000;
-    --quaternary-background-color: #fff;
+    --tertiary-background-color: #000000;
+    --quaternary-background-color: #ffffff;
+    --game-massage-background-color: #eeeeee;
 }
 
 html {
@@ -26,6 +27,8 @@ body {
     background-color: #fff;
 }
 
+/* Mine Sweeper Container */
+
 .mine-sweeper-container {
     position: absolute;
     top: 50%;
@@ -41,6 +44,8 @@ body {
     flex-direction: column;
     border: 1px solid var(--tertiary-background-color); 
 }
+
+/* Game Header */
 
 .game-nav {
     flex: 1 1 10%;
@@ -111,6 +116,48 @@ body {
     font-size: 4rem;
     line-height: 4rem;
 }
+
+.game-message.collapsed {
+    display: none;
+}
+
+.game-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20rem;
+    height: auto;
+    padding: 2rem;
+    border-radius: 10px;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    background-color: var(--game-massage-background-color);
+    color: green;
+    font-size: 2rem;
+    font-weight: 600;
+    z-index: 1;
+}
+
+.game-message-button {
+    padding: 1.5rem 3rem;
+    width: 4rem;
+    height: 2rem;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--primary-background-color);
+    border: 2px solid var(--secondary-background-color);
+    cursor: pointer;
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+/* Game Grid */
 
 .game-grid {
     flex: 1 1 90%;

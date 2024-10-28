@@ -4,8 +4,13 @@ const gameTime = document.getElementById('game-time');
 const gameGridElement = document.getElementById('game-grid');
 const gameStartButtonElement = document.getElementById('game-start-button');
 const gameGrid = document.getElementById('game-grid');
+const gameMessage = document.getElementById('game-message');
+const gameMessageText = document.getElementById('game-message-text');
+const gameMessageEmoji = document.getElementById('game-message-emoji');
+const gameMessageButton = document.getElementById('game-message-button');
 
-gameStartButtonElement.addEventListener('click', resetGame);    
+gameStartButtonElement.addEventListener('click', resetGame);
+gameMessageButton.addEventListener('click', closeGameMessage);
 
 const adjacentMinesColor = ["#0000FF", "#008000", "#FF0000", "#A50923", "#b86ceb", "#eb6cb4", "#fcbd86", "#f3f797"];
 const CELLS_ROW = 8;
@@ -260,13 +265,25 @@ function stopGame() {
 }
 
 function gameOver() {
-    console.log('Game over');
+    console.log('Game over!');
     stopGame();
     gameStartButtonElement.innerText = '😟';
+    gameMessageText.color = 'red';
+    gameMessageText.innerText = 'Game Over!';
+    gameMessageEmoji.innerText = '😟';
+    gameMessage.classList.toggle("collapsed");
 }
 
 function gameWin() {
-    console.log('You win!');
+    console.log('You win!!!');
     stopGame();
     gameStartButtonElement.innerText = '😀';
+    gameMessageText.color = 'green';
+    gameMessageText.innerText = 'You win!!!';
+    gameMessageEmoji.innerText = '😀';
+    gameMessage.classList.toggle("collapsed");
+}
+
+function closeGameMessage() {
+    gameMessage.classList.toggle("collapsed");
 }
