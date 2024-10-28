@@ -93,10 +93,13 @@ function settingsMenu() {
 }
 
 settingsDialog.addEventListener("close", (event) => {
-    boardSize = settingsDialog.returnValue;
     settingsDialog.close();
 
-    if (boardSize === "cancel") return;
+    if (settingsDialog.returnValue === "cancel") {
+        return;
+    }
+
+    boardSize = settingsDialog.returnValue;
 
     // Stop the current game (using the old CELLS_ROW and CELLS_COL values)
     stopGame();
@@ -135,7 +138,7 @@ settingsDialog.addEventListener("close", (event) => {
     gameGridElement.style.gridTemplateColumns = `repeat(${CELLS_COL}, 1fr)`;
     gameGridElement.style.gridTemplateRows = `repeat(${CELLS_ROW}, 1fr)`;
 
-    // Re-create the game board
+    // Re-create the game board (using the new CELLS_ROW and CELLS_COL values)
     createBoard(); 
 });
 
