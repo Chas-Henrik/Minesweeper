@@ -32,14 +32,14 @@
             </fieldset>
 
             <div class="settings-buttons">
-                <button value="cancel" formmethod="dialog">Cancel</button>
-                <button id="settings-ok-btn" value="default">OK</button>
+                <button id="settings-cancel-btn" value="cancel" type="button">Cancel</button>
+                <button id="settings-ok-btn" value="default" type="submit">OK</button>
             </div>
         </form>
     </dialog>
     <dialog id="about-dialog" class="about-dialog">
         <p>Minesweeper 1.0</p>
-        <button id="about-ok-btn" value="default">OK</button>
+        <button id="about-ok-btn" value="default" type="submit">OK</button>
     </dialog>
     <div id="mine-sweeper-container" class="mine-sweeper-container">
         <nav id="game-nav" class="game-nav">
@@ -57,7 +57,7 @@
             <div id="game-message" class="game-message collapsed">
                 <p id="game-message-text" class="game-message-paragraph">You Win!!!</p>
                 <p id="game-message-emoji" class="game-message-paragraph">😀</p>
-                <button id="game-message-button" class="game-message-button">OK</button>
+                <button id="game-message-button" class="game-message-button" type="button">OK</button>
             </div>
             <div id="game-grid" class="game-grid"></div>
         </div>

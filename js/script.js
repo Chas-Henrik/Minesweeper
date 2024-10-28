@@ -2,6 +2,7 @@ const aboutDialog = document.getElementById("about-dialog");
 const settingsDialog = document.getElementById("settings-dialog");
 const settingsForm = settingsDialog.querySelector("form");
 const settingsOkBtn = document.getElementById("settings-ok-btn");
+const settingsCancelBtn = document.getElementById("settings-cancel-btn");
 const mineSweeperContainer = document.getElementById("mine-sweeper-container");
 const gameMenuGame = document.getElementById('game-menu-game');
 const gameMenuAbout = document.getElementById('game-menu-about');
@@ -92,17 +93,15 @@ function settingsMenu() {
 }
 
 settingsDialog.addEventListener("close", (event) => {
-    boardSize =
-        settingsDialog.returnValue === "default"
-        ? "No return value."
-        : settingsDialog.returnValue; // Have to check for "default" rather than empty string
+    boardSize = settingsDialog.returnValue;
+    settingsDialog.close();
 
-    settingsDialog.close("default");
+    if (boardSize === "cancel") return;
 
-    // Stop the current game
+    // Stop the current game (using the old CELLS_ROW and CELLS_COL values)
     stopGame();
 
-    // Delete the current game board
+    // Delete the current game board (using the old CELLS_ROW and CELLS_COL values)
     deleteBoard();
 
     switch (boardSize) {
@@ -144,6 +143,11 @@ settingsOkBtn.addEventListener("click", (event) => {
     event.preventDefault(); // We don't want to submit this form
     const data = new FormData(settingsForm);
     settingsDialog.close(data.get("board-size"));
+});
+
+settingsCancelBtn.addEventListener("click", (event) => {
+    event.preventDefault();
+    settingsDialog.close("cancel");
 });
 
 /* About Menu */
