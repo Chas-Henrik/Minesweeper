@@ -1,8 +1,11 @@
+const aboutDialog = document.getElementById("about-dialog");
 const settingsDialog = document.getElementById("settings-dialog");
 const settingsForm = settingsDialog.querySelector("form");
-const settingsOkBtn = document.getElementById("settingsOkBtn");
+const settingsOkBtn = document.getElementById("settings-ok-btn");
 const mineSweeperContainer = document.getElementById("mine-sweeper-container");
 const gameMenuGame = document.getElementById('game-menu-game');
+const gameMenuAbout = document.getElementById('game-menu-about');
+const aboutOkBtn = document.getElementById("about-ok-btn");
 const scoreBoardElement = document.getElementById('score-board');
 const gameMinesLeft = document.getElementById('game-mines-left');
 const gameTime = document.getElementById('game-time');
@@ -15,6 +18,7 @@ const gameMessageEmoji = document.getElementById('game-message-emoji');
 const gameMessageButton = document.getElementById('game-message-button');
 
 gameMenuGame.addEventListener('click', settingsMenu);
+gameMenuAbout.addEventListener('click', aboutMenu);
 gameStartButtonElement.addEventListener('click', resetGame);
 gameMessageButton.addEventListener('click', closeGameMessage);
 
@@ -85,10 +89,9 @@ function forEachAdjacentCell(cell, callback) {
 
 function settingsMenu() {
     settingsDialog.showModal();
-    openCheck(settingsDialog);
 }
 
-settingsDialog.addEventListener("close", (e) => {
+settingsDialog.addEventListener("close", (event) => {
     boardSize =
         settingsDialog.returnValue === "default"
         ? "No return value."
@@ -140,9 +143,21 @@ settingsOkBtn.addEventListener("click", (event) => {
     event.preventDefault(); // We don't want to submit this form
     const data = new FormData(settingsForm);
     settingsDialog.close(data.get("board-size"));
-    event.preventDefault();
 });
 
+/* About Menu */
+
+function aboutMenu() {
+    aboutDialog.showModal();
+}
+
+aboutDialog.addEventListener("close", (event) => {
+    aboutDialog.close("default");
+})
+
+aboutOkBtn.addEventListener("click", (event) => {
+    aboutDialog.close();
+});
 
 /* Create Game */
 

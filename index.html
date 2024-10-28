@@ -32,15 +32,19 @@
 
             <div class="settings-buttons">
                 <button value="cancel" formmethod="dialog">Cancel</button>
-                <button id="settingsOkBtn" value="default">Ok</button>
+                <button id="settings-ok-btn" value="default">OK</button>
             </div>
         </form>
+    </dialog>
+    <dialog id="about-dialog" class="about-dialog">
+        <p>Minesweeper 1.0</p>
+        <button id="about-ok-btn" value="default">OK</button>
     </dialog>
     <div id="mine-sweeper-container" class="mine-sweeper-container">
         <nav id="game-nav" class="game-nav">
             <ul id="game-menu" class="game-menu">
                 <li id="game-menu-game">Game</li>
-                <li>Help</li>
+                <li id="game-menu-about">About</li>
             </ul>
         </nav>
         <div id="game-container" class="game-container">
