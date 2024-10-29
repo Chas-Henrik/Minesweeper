@@ -139,7 +139,10 @@ settingsDialog.addEventListener("close", (event) => {
     gameGridElement.style.gridTemplateRows = `repeat(${CELLS_ROW}, 1fr)`;
 
     // Re-create the game board (using the new CELLS_ROW and CELLS_COL values)
-    createBoard(); 
+    createBoard();
+
+    // Initialize the game
+    resetGame();
 });
 
 settingsOkBtn.addEventListener("click", (event) => {
@@ -241,21 +244,22 @@ function createCellElement(cell) {
     return cellElement;
 }
 
-/* Start Game */
+/* Initialize/Reset Game */
+
+resetGame();
 
 function resetGame() {
+    gameMessage.classList.add("collapsed");
     stopGame();
     resetGameGrid();
     resetGameCounters();
     generateGameGrid();
     clearGameBoard();
-
     gameStartButtonElement.innerText = '🙂';
     gameGrid.addEventListener('click', handleCellLeftClick);
     gameGrid.addEventListener('contextmenu', handleCellRightClick);
-    gameState = 'stopped';
+    gameState = 'initialized';
 }
-
 
 function resetGameGrid() {
     for (let row = 0; row < CELLS_ROW; row++) {
@@ -308,20 +312,22 @@ function clearGameBoard() {
     }
 }
 
-/* Handle Game Events */
-
 function startGame() {
     startGameTimer();
     gameStartButtonElement.innerText = '😀';
     gameState = 'running';
 }
 
+/* Game Events Handlers */
+
 function handleCellLeftClick(event) {
     event.preventDefault();
 
-    (gameState === 'stopped') ? startGame(): null;
-
     if(event.target !== gameGrid) {
+        if(gameState === 'initialized') {
+            startGame();
+        }
+
         const cell = gameCells[event.target.dataset.row][event.target.dataset.column];
         cell.isRevealed = true;
         revealCell(cell);
@@ -332,9 +338,11 @@ function handleCellLeftClick(event) {
 function handleCellRightClick(event) {
     event.preventDefault();
 
-    (gameState === 'stopped') ? startGame(): null;
-
     if(event.target !== gameGrid) {
+        if(gameState === 'initialized') {
+            startGame();
+        }
+        
         const cell = gameCells[event.target.dataset.row][event.target.dataset.column];
         if(!cell.isRevealed) {
             cell.isMarked = !cell.isMarked;
