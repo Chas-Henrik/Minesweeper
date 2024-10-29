@@ -27,6 +27,7 @@ const adjacentMinesColor = ["#0000FF", "#008000", "#FF0000", "#A50923", "#b86ceb
 let CELLS_ROW = 8;
 let CELLS_COL = 8;
 let MINES = 10;
+const MAX_TIME = 999;
 
 let revealedCells = 0;
 let minesLeft = MINES;
@@ -56,7 +57,11 @@ function startGameTimer() {
     if (!intervalId) {
         intervalId = setInterval(() => {
             time++;
-            gameTime.innerText = time;
+            if (time <= MAX_TIME) {
+                gameTime.innerText = time;
+            } else {
+                stopGameTimer();
+            }
         }, 1000);
     }
     console.log('Game timer running');
@@ -65,9 +70,11 @@ function startGameTimer() {
 /* Shared functions */
 
 function stopGameTimer() {
-    clearInterval(intervalId);
-    intervalId = null;
-    console.log('Game timer stopped');
+    if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+        console.log('Game timer stopped');
+    }
 }
 
 function minesCleared() {
