@@ -170,9 +170,12 @@ body {
 }
 
 .game-score-info {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 700;
     width: 35%;
     height: auto;
     background-color: var(--tertiary-background-color);
+    overflow: hidden;
 }
 
 .game-start-button {
@@ -193,7 +196,7 @@ body {
 .game-score-info {
     background-color: var(--tertiary-background-color);
     color: red;
-    padding: 0 1rem;
+    padding: 0 0.5rem;
     text-align: right;
     display: flex;
     justify-content: flex-end;
