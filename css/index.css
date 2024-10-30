@@ -176,10 +176,12 @@ body {
     color: red;
     padding: 0 0.5rem;
     text-align: right;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: "Courier Prime", serif;
+    font-style: normal;
     font-weight: 700;
     font-size: 4rem;
     line-height: 4rem;
+    padding-top: 0.5rem;
     overflow: hidden;
 }
 
