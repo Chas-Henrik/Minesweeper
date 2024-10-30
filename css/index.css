@@ -170,11 +170,16 @@ body {
 }
 
 .game-score-info {
-    font-family: 'Courier New', Courier, monospace;
-    font-weight: 700;
     width: 35%;
     height: auto;
     background-color: var(--tertiary-background-color);
+    color: red;
+    padding: 0 0.5rem;
+    text-align: right;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 700;
+    font-size: 4rem;
+    line-height: 4rem;
     overflow: hidden;
 }
 
@@ -191,18 +196,6 @@ body {
 .game-start-button:hover {
     background-color: var(--secondary-background-color);
     color: var(--quaternary-background-color);
-}   
-
-.game-score-info {
-    background-color: var(--tertiary-background-color);
-    color: red;
-    padding: 0 0.5rem;
-    text-align: right;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    font-size: 4rem;
-    line-height: 4rem;
 }
 
 /* Game Message */
