@@ -1,22 +1,23 @@
-const aboutDialog = document.getElementById("about-dialog");
-const settingsDialog = document.getElementById("settings-dialog");
+const aboutDialog = document.getElementById("about-dialog-id");
+const settingsDialog = document.getElementById("settings-dialog-id");
 const settingsForm = settingsDialog.querySelector("form");
-const settingsOkBtn = document.getElementById("settings-ok-btn");
-const settingsCancelBtn = document.getElementById("settings-cancel-btn");
-const mineSweeperContainer = document.getElementById("mine-sweeper-container");
-const gameMenuGame = document.getElementById('game-menu-game');
-const gameMenuAbout = document.getElementById('game-menu-about');
-const aboutOkBtn = document.getElementById("about-ok-btn");
-const scoreBoardElement = document.getElementById('score-board');
-const gameMinesLeft = document.getElementById('game-mines-left');
-const gameTime = document.getElementById('game-time');
-const gameGridElement = document.getElementById('game-grid');
-const gameStartButtonElement = document.getElementById('game-start-button');
-const gameGrid = document.getElementById('game-grid');
-const gameMessage = document.getElementById('game-message');
-const gameMessageText = document.getElementById('game-message-text');
-const gameMessageEmoji = document.getElementById('game-message-emoji');
-const gameMessageButton = document.getElementById('game-message-button');
+const settingsOkBtn = document.getElementById("settings-ok-btn-id");
+const settingsCancelBtn = document.getElementById("settings-cancel-btn-id");
+const mineSweeperContainer = document.getElementById("mine-sweeper-container-id");
+const gameMenuGame = document.getElementById('game-menu-game-id');
+const gameMenuAbout = document.getElementById('game-menu-about-id');
+const aboutOkBtn = document.getElementById("about-ok-btn-id");
+const scoreBoardElement = document.getElementById('score-board-id');
+const gameMinesLeft = document.getElementById('game-mines-left-id');
+const gameTime = document.getElementById('game-time-id');
+const gameGridElement = document.getElementById('game-grid-id');
+const gameStartButtonElement = document.getElementById('game-start-button-id');
+const gameGrid = document.getElementById('game-grid-id');
+const gameMessageContainer = document.getElementById('game-message-container-id');
+const gameMessage = document.getElementById('game-message-id');
+const gameMessageText = document.getElementById('game-message-text-id');
+const gameMessageEmoji = document.getElementById('game-message-emoji-id');
+const gameMessageButton = document.getElementById('game-message-button-id');
 
 gameMenuGame.addEventListener('click', settingsMenu);
 gameMenuAbout.addEventListener('click', aboutMenu);
@@ -256,7 +257,7 @@ function createCellElement(cell) {
 resetGame();
 
 function resetGame() {
-    gameMessage.classList.add("collapsed");
+    gameMessageContainer.classList.add("collapsed");
     stopGame();
     resetGameGrid();
     resetGameCounters();
@@ -417,7 +418,7 @@ function gameOver() {
     gameMessageText.color = 'red';
     gameMessageText.innerText = 'Game Over!';
     gameMessageEmoji.innerText = '😟';
-    gameMessage.classList.toggle("collapsed");
+    gameMessageContainer.classList.toggle("collapsed");
 }
 
 function gameWin() {
@@ -427,7 +428,7 @@ function gameWin() {
     gameMessageText.color = 'green';
     gameMessageText.innerText = 'You win!!!';
     gameMessageEmoji.innerText = '😀';
-    gameMessage.classList.toggle("collapsed");
+    gameMessageContainer.classList.toggle("collapsed");
 }
 
 function revealMines() {
@@ -441,5 +442,5 @@ function revealMines() {
 }
 
 function closeGameMessage() {
-    gameMessage.classList.toggle("collapsed");
+    gameMessageContainer.classList.toggle("collapsed");
 }

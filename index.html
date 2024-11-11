@@ -15,54 +15,55 @@
     <title>Minesweeper</title>
 </head>
 <body>
-    <dialog id="settings-dialog" class="settings-dialog">
+    <dialog id="settings-dialog-id" class="settings-dialog">
         <form class="settings-form" defaultButton="settings-ok-btn">
             <fieldset class="settings-fieldset">
                 <legend>Game Board Size</legend>
-                
                 <div>
-                    <input id="small-board" name="board-size" value="small" type="radio" checked >
-                    <label for="small-board">Small (8x8)</label>
+                    <input id="small-board-id" name="board-size" value="small" type="radio" checked >
+                    <label for="small-board-id">Small (8x8)</label>
                 </div>
                 <div>
-                    <input id="medium-board" name="board-size" value="medium" type="radio" >
-                    <label for="medium-board">Medium (16x16)</label>
+                    <input id="medium-board-id" name="board-size" value="medium" type="radio" >
+                    <label for="medium-board-id">Medium (16x16)</label>
                 </div>
                 <div>
-                    <input id="large-board" name="board-size" value="large" type="radio" >
-                    <label for="large-board">Large (24x24)</label>
+                    <input id="large-board-id" name="board-size" value="large" type="radio" >
+                    <label for="large-board-id">Large (24x24)</label>
                 </div>
             </fieldset>
 
             <div class="settings-buttons">
-                <button id="settings-cancel-btn" value="cancel" type="button">Cancel</button>
-                <button id="settings-ok-btn" value="default" type="submit">OK</button>
+                <button id="settings-cancel-btn-id" value="cancel" type="button">Cancel</button>
+                <button id="settings-ok-btn-id" value="default" type="submit">OK</button>
             </div>
         </form>
     </dialog>
-    <dialog id="about-dialog" class="about-dialog">
+    <dialog id="about-dialog-id" class="about-dialog">
         <p>Minesweeper 1.0</p>
-        <button id="about-ok-btn" value="default" type="submit">OK</button>
+        <button id="about-ok-btn-id" value="default" type="submit">OK</button>
     </dialog>
-    <div id="mine-sweeper-container" class="mine-sweeper-container">
-        <nav id="game-nav" class="game-nav">
-            <ul id="game-menu" class="game-menu">
-                <li id="game-menu-game">Game</li>
-                <li id="game-menu-about">About</li>
+    <div id="mine-sweeper-container-id" class="mine-sweeper-container">
+        <nav id="game-nav-id" class="game-nav">
+            <ul id="game-menu-id" class="game-menu">
+                <li id="game-menu-game-id">Game</li>
+                <li id="game-menu-about-id">About</li>
             </ul>
         </nav>
-        <div id="game-container" class="game-container">
-            <div id="score-board" class="score-board">
-                <div id="game-mines-left" class="game-score-info">0</div>
-                <button id="game-start-button" class="game-start-button" type="button">🙂</button>
-                <div id="game-time" class="game-score-info">0</div>
+        <div id="game-container-id" class="game-container">
+            <div id="score-board-id" class="score-board">
+                <div id="game-mines-left-id" class="game-score-info">0</div>
+                <button id="game-start-button-id" class="game-start-button" type="button">🙂</button>
+                <div id="game-time-id" class="game-score-info">0</div>
             </div>
-            <div id="game-message" class="game-message collapsed">
-                <p id="game-message-text" class="game-message-paragraph">You Win!!!</p>
-                <p id="game-message-emoji" class="game-message-paragraph">😀</p>
-                <button id="game-message-button" class="game-message-button" type="button">OK</button>
+            <div id="game-grid-id" class="game-grid"></div>
+        </div>
+        <div id="game-message-container-id" class="game-message-container collapsed">
+            <div id="game-message-id" class="game-message">
+                <p id="game-message-text-id" class="game-message-paragraph">You Win!!!</p>
+                <p id="game-message-emoji-id" class="game-message-paragraph">😀</p>
+                <button id="game-message-button-id" class="game-message-button" type="button">OK</button>
             </div>
-            <div id="game-grid" class="game-grid"></div>
         </div>
     </div>
 </body>
